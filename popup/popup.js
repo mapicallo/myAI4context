@@ -88,7 +88,6 @@ function buildContextDocument(profile) {
         updatedAt: new Date().toISOString(),
         profile: {
             name: profile.name || '',
-            type: profile.type || 'person',
             bio: profile.bio || '',
             links: profile.links || [],
             rules: profile.rules || ''

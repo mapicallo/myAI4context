@@ -6,7 +6,6 @@ class ProfileManager {
         this.currentLanguage = 'es';
         this.profile = {
             name: '',
-            type: 'person',
             bio: '',
             links: [],
             rules: ''
@@ -76,19 +75,6 @@ class ProfileManager {
             if (optEn) optEn.textContent = t('english');
         }
 
-        this.updateProfileTypeOptions();
-    }
-
-    updateProfileTypeOptions() {
-        const select = document.getElementById('profileType');
-        if (!select) return;
-        const value = select.value;
-        select.innerHTML = `
-            <option value="person">${this.t('typePerson')}</option>
-            <option value="company">${this.t('typeCompany')}</option>
-            <option value="organization">${this.t('typeOrganization')}</option>
-        `;
-        select.value = value;
     }
 
     async loadProfile() {
@@ -106,7 +92,6 @@ class ProfileManager {
 
     populateForm() {
         document.getElementById('profileName').value = this.profile.name || '';
-        document.getElementById('profileType').value = this.profile.type || 'person';
         document.getElementById('profileBio').value = this.profile.bio || '';
         document.getElementById('profileRules').value = this.profile.rules || '';
     }
@@ -182,7 +167,6 @@ class ProfileManager {
 
     collectFormData() {
         this.profile.name = document.getElementById('profileName').value.trim();
-        this.profile.type = document.getElementById('profileType').value;
         this.profile.bio = document.getElementById('profileBio').value.trim();
         this.profile.rules = document.getElementById('profileRules').value.trim();
         this.profile.links = (this.profile.links || []).filter(l => l.url && l.url.trim());
