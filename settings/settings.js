@@ -13,7 +13,8 @@ class ProfileManager {
             bio: '',
             bioFiles: [],
             links: [],
-            rules: ''
+            rules: '',
+            rulesFiles: []
         };
         this.init();
     }
@@ -34,6 +35,7 @@ class ProfileManager {
         this.renderSteps();
         this.renderLinks();
         this.renderBioFiles();
+        this.renderRulesFiles();
         this.bindEvents();
         this.updateStepVisibility();
     }
@@ -56,6 +58,7 @@ class ProfileManager {
         this.applyTranslations();
         this.renderLinks();
         this.renderBioFiles();
+        this.renderRulesFiles();
     }
 
     applyTranslations() {
@@ -95,6 +98,7 @@ class ProfileManager {
                 this.profile = { ...this.profile, ...mycontext_profile };
                 if (!this.profile.links) this.profile.links = [];
                 if (!this.profile.bioFiles) this.profile.bioFiles = [];
+                if (!this.profile.rulesFiles) this.profile.rulesFiles = [];
                 this.populateForm();
             }
         } catch (e) {
@@ -157,6 +161,28 @@ class ProfileManager {
         this.bindLinkEvents();
     }
 
+    renderRulesFiles() {
+        const container = document.getElementById('rulesFilesList');
+        if (!container) return;
+        container.innerHTML = '';
+        (this.profile.rulesFiles || []).forEach((f, index) => {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                <span class="file-item-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
+                <button type="button" class="btn-remove btn-remove-file" data-index="${index}" title="${this.t('removeFile') || 'Eliminar'}" aria-label="Eliminar">${this.getTrashIcon()}</button>
+            `;
+            container.appendChild(div);
+        });
+        container.querySelectorAll('.btn-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.target.closest('.btn-remove').dataset.index);
+                this.profile.rulesFiles.splice(idx, 1);
+                this.renderRulesFiles();
+            });
+        });
+    }
+
     bindLinkEvents() {
         document.querySelectorAll('.link-item input').forEach(input => {
             input.addEventListener('change', (e) => {
@@ -202,6 +228,35 @@ class ProfileManager {
             document.getElementById('bioFilesInput').click();
         });
         document.getElementById('bioFilesInput')?.addEventListener('change', (e) => this.handleBioFiles(e));
+
+        document.getElementById('selectRulesFiles')?.addEventListener('click', () => {
+            document.getElementById('rulesFilesInput').click();
+        });
+        document.getElementById('rulesFilesInput')?.addEventListener('change', (e) => this.handleRulesFiles(e));
+    }
+
+    async handleRulesFiles(e) {
+        const files = Array.from(e.target.files || []);
+        e.target.value = '';
+        if (files.length === 0) return;
+
+        const statusEl = document.getElementById('rulesFilesStatus');
+        statusEl.textContent = this.t('processingFiles');
+
+        this.profile.rulesFiles = this.profile.rulesFiles || [];
+        for (const file of files) {
+            try {
+                const text = await this.extractTextFromFile(file);
+                this.profile.rulesFiles.push({ name: file.name, content: text || '' });
+            } catch (err) {
+                console.warn('[myAI4context] Error extracting rules file:', file.name, err);
+                statusEl.textContent = this.t('fileError') + ': ' + file.name;
+            }
+        }
+
+        this.renderRulesFiles();
+        statusEl.textContent = this.t('filesAdded');
+        setTimeout(() => { statusEl.textContent = ''; }, 2000);
     }
 
     async handleBioFiles(e) {
@@ -264,6 +319,7 @@ class ProfileManager {
         this.profile.rules = document.getElementById('profileRules').value.trim();
         this.profile.links = (this.profile.links || []).filter(l => l.url && l.url.trim());
         this.profile.bioFiles = this.profile.bioFiles || [];
+        this.profile.rulesFiles = this.profile.rulesFiles || [];
     }
 
     goStep(delta) {
