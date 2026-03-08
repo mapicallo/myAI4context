@@ -45,16 +45,17 @@
                 <!-- Step 2: Bio -->
                 <div class="step-content" id="step2">
                     <h2 data-i18n="description">Descripción</h2>
-                    <p class="section-hint" data-i18n="bioHint">Puedes usar Markdown: ## para títulos, - para listas, **negrita**...</p>
                     <div class="form-group">
-                        <label for="profileBio" data-i18n="bioLabel">Bio / Descripción</label>
-                        <textarea id="profileBio" rows="6" data-i18n-placeholder="bioPlaceholder" placeholder="Quién eres, qué haces..."></textarea>
+                        <label for="profileBio" data-i18n="bioLabel">Bio / Descripción (texto a mano)</label>
+                        <p class="section-hint" data-i18n="bioHint">Solo si quieres añadir texto escribiendo o copiando/pegando. Puedes usar Markdown.</p>
+                        <textarea id="profileBio" rows="4" data-i18n-placeholder="bioPlaceholder" placeholder="Quién eres, qué haces..."></textarea>
                     </div>
                     <div class="form-group file-upload-group">
-                        <p class="section-hint" data-i18n="bioFilesHint">O añade contenido desde archivos (PDF, Word, Markdown):</p>
+                        <p class="section-hint" data-i18n="bioFilesHint">Archivos (PDF, Word, Markdown). El contenido se incluirá en el documento para la IA:</p>
                         <input type="file" id="bioFilesInput" accept=".pdf,.doc,.docx,.md,.txt" multiple style="display: none;">
-                        <button type="button" id="selectBioFiles" class="btn btn-outline" data-i18n="selectFiles">Seleccionar archivos</button>
+                        <button type="button" id="selectBioFiles" class="btn btn-outline" data-i18n="selectFiles">Añadir archivos</button>
                         <span id="bioFilesStatus" class="file-status"></span>
+                        <div id="bioFilesList" class="files-list"></div>
                     </div>
                 </div>
 

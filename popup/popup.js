@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Check if profile exists
     const { mycontext_profile: profile } = await chrome.storage.local.get(['mycontext_profile']);
-    const hasData = profile && (profile.name || profile.bio || (profile.links && profile.links.length > 0));
+    const hasData = profile && (profile.name || profile.bio || (profile.bioFiles && profile.bioFiles.length > 0) || (profile.links && profile.links.length > 0));
 
     if (hasData) {
         noProfile.style.display = 'none';
@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function buildContextDocument(profile) {
+    const bioFromFiles = (profile.bioFiles || []).map(f => `# ${f.name}\n\n${f.content || ''}`).join('\n\n---\n\n');
+    const fullBio = [profile.bio || '', bioFromFiles].filter(Boolean).join('\n\n\n');
     return {
         version: '1.0',
         type: 'ai-context-document',
@@ -88,7 +90,7 @@ function buildContextDocument(profile) {
         updatedAt: new Date().toISOString(),
         profile: {
             name: profile.name || '',
-            bio: profile.bio || '',
+            bio: fullBio,
             links: profile.links || [],
             rules: profile.rules || ''
         }

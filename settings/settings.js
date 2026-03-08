@@ -11,6 +11,7 @@ class ProfileManager {
         this.profile = {
             name: '',
             bio: '',
+            bioFiles: [],
             links: [],
             rules: ''
         };
@@ -28,6 +29,7 @@ class ProfileManager {
         this.applyTranslations();
         this.renderSteps();
         this.renderLinks();
+        this.renderBioFiles();
         this.bindEvents();
         this.updateStepVisibility();
     }
@@ -49,6 +51,7 @@ class ProfileManager {
         document.documentElement.lang = lang === 'es' ? 'es' : 'en';
         this.applyTranslations();
         this.renderLinks();
+        this.renderBioFiles();
     }
 
     applyTranslations() {
@@ -87,6 +90,7 @@ class ProfileManager {
             if (mycontext_profile) {
                 this.profile = { ...this.profile, ...mycontext_profile };
                 if (!this.profile.links) this.profile.links = [];
+                if (!this.profile.bioFiles) this.profile.bioFiles = [];
                 this.populateForm();
             }
         } catch (e) {
@@ -106,6 +110,28 @@ class ProfileManager {
             el.classList.remove('active', 'completed');
             if (stepNum === this.currentStep) el.classList.add('active');
             else if (stepNum < this.currentStep) el.classList.add('completed');
+        });
+    }
+
+    renderBioFiles() {
+        const container = document.getElementById('bioFilesList');
+        if (!container) return;
+        container.innerHTML = '';
+        (this.profile.bioFiles || []).forEach((f, index) => {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                <span class="file-item-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
+                <button type="button" class="btn-remove" data-index="${index}">×</button>
+            `;
+            container.appendChild(div);
+        });
+        container.querySelectorAll('.btn-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.target.closest('.btn-remove').dataset.index);
+                this.profile.bioFiles.splice(idx, 1);
+                this.renderBioFiles();
+            });
         });
     }
 
@@ -180,25 +206,21 @@ class ProfileManager {
         if (files.length === 0) return;
 
         const statusEl = document.getElementById('bioFilesStatus');
-        const textarea = document.getElementById('profileBio');
         statusEl.textContent = this.t('processingFiles');
 
-        let allText = '';
+        this.profile.bioFiles = this.profile.bioFiles || [];
         for (const file of files) {
             try {
                 const text = await this.extractTextFromFile(file);
-                if (text) allText += (allText ? '\n\n---\n\n' : '') + `# ${file.name}\n\n` + text;
+                this.profile.bioFiles.push({ name: file.name, content: text || '' });
             } catch (err) {
                 console.warn('[myAI4context] Error extracting:', file.name, err);
                 statusEl.textContent = this.t('fileError') + ': ' + file.name;
             }
         }
 
-        if (allText) {
-            const current = textarea.value.trim();
-            textarea.value = current ? current + '\n\n' + allText : allText;
-            statusEl.textContent = this.t('filesAdded');
-        }
+        this.renderBioFiles();
+        statusEl.textContent = this.t('filesAdded');
         setTimeout(() => { statusEl.textContent = ''; }, 2000);
     }
 
@@ -237,6 +259,7 @@ class ProfileManager {
         this.profile.bio = document.getElementById('profileBio').value.trim();
         this.profile.rules = document.getElementById('profileRules').value.trim();
         this.profile.links = (this.profile.links || []).filter(l => l.url && l.url.trim());
+        this.profile.bioFiles = this.profile.bioFiles || [];
     }
 
     goStep(delta) {

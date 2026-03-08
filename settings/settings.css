@@ -180,6 +180,34 @@ body {
     margin-left: 8px;
 }
 
+.files-list {
+    margin-top: 12px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.file-item-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #495057;
+}
+
+.file-item .btn-remove {
+    padding: 4px 10px;
+    margin-left: 8px;
+}
+
 .link-item {
     display: flex;
     gap: 8px;
