@@ -26,24 +26,21 @@
         </div>
 
         <div class="content">
-            <div id="noProfile" class="state-message">
-                <p data-i18n="noProfile">No tienes un perfil configurado.</p>
-                <p class="hint" data-i18n="noProfileHint">Configura tu perfil para generar tu documento de contexto.</p>
-                <button id="openSettings" class="btn btn-primary" data-i18n="configureProfile">Configurar perfil</button>
+            <div id="noProfiles" class="state-message">
+                <p data-i18n="noProfile">No tienes perfiles configurados.</p>
+                <p class="hint" data-i18n="noProfileHint">Crea tu primer perfil para generar tu documento de contexto.</p>
+                <button id="newProfile" class="btn btn-primary" data-i18n="newProfile">Nuevo perfil</button>
             </div>
 
-            <div id="hasProfile" class="state-message" style="display: none;">
-                <p data-i18n="profileReady">Tu perfil está listo.</p>
-                <div class="actions">
-                    <button id="downloadJson" class="btn btn-secondary" data-i18n="downloadJson">Descargar JSON</button>
-                    <button id="downloadMd" class="btn btn-secondary" data-i18n="downloadMd">Descargar Markdown</button>
-                    <button id="openSettingsFromProfile" class="btn btn-outline" data-i18n="editProfile">Editar perfil</button>
-                </div>
+            <div id="profilesList" class="profiles-list" style="display: none;">
+                <div id="profilesContainer"></div>
+                <button id="newProfileFromList" class="btn btn-outline btn-full" data-i18n="newProfile">+ Nuevo perfil</button>
             </div>
         </div>
 
         <div class="footer">
             <a href="https://ai4context.com" target="_blank" rel="noopener">ai4context.com</a>
+            <span class="footer-attribution">© 2025 Manuel Angel Picallo Pérez</span>
         </div>
     </div>
 

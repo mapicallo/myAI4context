@@ -13,6 +13,7 @@
                 <div class="header-title">
                     <h1>📄 myAI4context</h1>
                     <p id="headerSubtitle">Configura tu documento de contexto para IAs</p>
+                    <p id="profileContext" class="profile-context" aria-live="polite"></p>
                 </div>
                 <div class="language-selector">
                     <label for="languageSelect">🌐</label>
@@ -63,6 +64,13 @@
                 <div class="step-content" id="step3">
                     <h2 data-i18n="links">Enlaces</h2>
                     <p class="section-hint" data-i18n="linksHint">Añade tus enlaces oficiales (LinkedIn, web, email, etc.)</p>
+                    <div class="form-group default-rules-group" style="margin-bottom: 16px;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="includeLinksContent">
+                            <span data-i18n="includeLinksContentLabel">Incluir contenido de enlaces al generar</span>
+                        </label>
+                        <p class="section-hint" data-i18n="includeLinksContentHint">Al descargar, se obtendrá el texto de cada enlace y se añadirá al documento. Así la IA tendrá la información sin navegar.</p>
+                    </div>
                     <div id="linksContainer"></div>
                     <button type="button" id="addLink" class="btn btn-outline" data-i18n="addLink">+ Añadir enlace</button>
                 </div>
@@ -103,6 +111,7 @@
 
         <div class="footer">
             <a href="https://ai4context.com" target="_blank" rel="noopener">ai4context.com</a>
+            <span class="footer-attribution">© 2025 Manuel Angel Picallo Pérez</span>
         </div>
     </div>
 

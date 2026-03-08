@@ -91,6 +91,61 @@ body {
     margin-bottom: 16px;
 }
 
+.profiles-list {
+    margin-top: 8px;
+}
+
+.profile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.profile-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    color: #212529;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-icon {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    color: #495057;
+}
+
+.btn-icon:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+.btn-icon.btn-danger:hover {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-full {
+    width: 100%;
+    margin-top: 8px;
+}
+
 .actions {
     display: flex;
     flex-direction: column;
@@ -141,6 +196,9 @@ body {
     padding-top: 12px;
     border-top: 1px solid #e9ecef;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .footer a {
@@ -152,4 +210,9 @@ body {
 .footer a:hover {
     color: #0d6efd;
     text-decoration: underline;
+}
+
+.footer-attribution {
+    font-size: 0.7rem;
+    color: #adb5bd;
 }

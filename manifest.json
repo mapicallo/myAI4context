@@ -3,7 +3,9 @@
   "name": "myAI4context - AI Context Document",
   "version": "0.1.0",
   "description": "AI Context Document by AI4Context. Create and share your profile. One link, one document. Share with any AI.",
+  "author": "Manuel Angel Picallo Pérez",
   "permissions": ["storage", "downloads"],
+  "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "background/background.js"
   },

@@ -8,6 +8,7 @@ class ProfileManager {
         this.currentStep = 1;
         this.totalSteps = 4;
         this.currentLanguage = 'es';
+        this.editingProfileId = null;
         this.profile = {
             name: '',
             bio: '',
@@ -92,18 +93,54 @@ class ProfileManager {
 
     }
 
+    getDefaultProfile() {
+        return {
+            name: '',
+            bio: '',
+            bioFiles: [],
+            links: [],
+            rules: '',
+            rulesFiles: [],
+            useDefaultRules: true,
+            includeLinksContent: false
+        };
+    }
+
     async loadProfile() {
         try {
-            const { mycontext_profile } = await chrome.storage.local.get(['mycontext_profile']);
-            if (mycontext_profile) {
-                this.profile = { ...this.profile, ...mycontext_profile };
+            const { mycontext_profile, mycontext_profiles, mycontext_editingProfileId } = await chrome.storage.local.get(['mycontext_profile', 'mycontext_profiles', 'mycontext_editingProfileId']);
+            let profileData = null;
+            if (mycontext_editingProfileId) {
+                const profiles = mycontext_profiles || [];
+                profileData = profiles.find(p => p.id === mycontext_editingProfileId);
+            } else if (mycontext_profile && !mycontext_profiles) {
+                profileData = mycontext_profile;
+            }
+            if (profileData) {
+                this.profile = { ...this.getDefaultProfile(), ...profileData };
                 if (!this.profile.links) this.profile.links = [];
                 if (!this.profile.bioFiles) this.profile.bioFiles = [];
                 if (!this.profile.rulesFiles) this.profile.rulesFiles = [];
-                this.populateForm();
+            } else {
+                this.profile = { ...this.getDefaultProfile() };
             }
+            this.editingProfileId = mycontext_editingProfileId || null;
+            this.populateForm();
+            this.updateProfileContext();
         } catch (e) {
             console.warn('[myContext] Error loading profile:', e);
+        }
+    }
+
+    updateProfileContext() {
+        const el = document.getElementById('profileContext');
+        if (!el) return;
+        const nameInput = document.getElementById('profileName');
+        const name = (nameInput ? nameInput.value : this.profile.name || '').trim();
+        if (this.editingProfileId) {
+            el.textContent = this.t('editingProfile').replace('{name}', name || this.t('unnamedProfile'));
+        } else {
+            el.textContent = name ? this.t('creatingProfile').replace('{name}', name) : this.t('newProfile');
         }
     }
 
@@ -113,6 +150,8 @@ class ProfileManager {
         document.getElementById('profileRules').value = this.profile.rules || '';
         const defaultRulesCb = document.getElementById('useDefaultRules');
         if (defaultRulesCb) defaultRulesCb.checked = this.profile.useDefaultRules !== false;
+        const includeLinksCb = document.getElementById('includeLinksContent');
+        if (includeLinksCb) includeLinksCb.checked = this.profile.includeLinksContent === true;
     }
 
     renderSteps() {
@@ -209,6 +248,18 @@ class ProfileManager {
         if (langSelect) {
             langSelect.addEventListener('change', (e) => this.changeLanguage(e.target.value));
         }
+
+        chrome.storage.onChanged.addListener((changes, area) => {
+            if (area === 'local' && changes.mycontext_editingProfileId) {
+                this.loadProfile().then(() => {
+                    this.renderLinks();
+                    this.renderBioFiles();
+                    this.renderRulesFiles();
+                });
+            }
+        });
+
+        document.getElementById('profileName')?.addEventListener('input', () => this.updateProfileContext());
 
         document.getElementById('addLink').addEventListener('click', () => {
             this.profile.links = this.profile.links || [];
@@ -322,6 +373,8 @@ class ProfileManager {
         this.profile.rules = document.getElementById('profileRules').value.trim();
         const defaultRulesCb = document.getElementById('useDefaultRules');
         this.profile.useDefaultRules = defaultRulesCb ? defaultRulesCb.checked : true;
+        const includeLinksCb = document.getElementById('includeLinksContent');
+        this.profile.includeLinksContent = includeLinksCb ? includeLinksCb.checked : false;
         this.profile.links = (this.profile.links || []).filter(l => l.url && l.url.trim());
         this.profile.bioFiles = this.profile.bioFiles || [];
         this.profile.rulesFiles = this.profile.rulesFiles || [];
@@ -360,7 +413,17 @@ class ProfileManager {
     async saveProfile() {
         this.collectFormData();
         try {
-            await chrome.storage.local.set({ mycontext_profile: this.profile });
+            const { mycontext_profiles: profiles = [] } = await chrome.storage.local.get(['mycontext_profiles']);
+            let updated;
+            if (this.editingProfileId) {
+                updated = profiles.map(p => p.id === this.editingProfileId ? { ...this.profile, id: this.editingProfileId } : p);
+            } else {
+                const id = this.profile.id || 'p' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+                updated = [...profiles, { ...this.profile, id }];
+            }
+            await chrome.storage.local.set({ mycontext_profiles: updated });
+            await chrome.storage.local.remove('mycontext_editingProfileId');
+            await chrome.storage.local.remove('mycontext_profile');
             this.showStatus(this.t('profileSaved'), 'success');
         } catch (e) {
             this.showStatus(this.t('errorSaving') + ': ' + e.message, 'error');
