@@ -1,11 +1,51 @@
 // myContext Popup
+const t = (key, params = {}) => {
+    const lang = typeof MyContextTranslations !== 'undefined' ? (currentLang && MyContextTranslations[currentLang] ? currentLang : 'es') : 'es';
+    let text = MyContextTranslations[lang]?.[key] || MyContextTranslations.es?.[key] || key;
+    for (const [k, v] of Object.entries(params)) text = text.replace(`{${k}}`, v);
+    return text;
+};
+
+let currentLang = 'es';
+
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t(key)) el.textContent = t(key);
+    });
+    const subtitle = document.getElementById('subtitle');
+    if (subtitle) subtitle.textContent = t('subtitle');
+    const langLabel = document.getElementById('languageLabel');
+    if (langLabel) langLabel.textContent = t('language');
+    const langSelect = document.getElementById('languageSelect');
+    if (langSelect) {
+        langSelect.value = currentLang;
+        const optEs = langSelect.querySelector('option[value="es"]');
+        const optEn = langSelect.querySelector('option[value="en"]');
+        if (optEs) optEs.textContent = t('spanish');
+        if (optEn) optEn.textContent = t('english');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
+    const { mycontext_language: lang } = await chrome.storage.local.get(['mycontext_language']);
+    currentLang = lang || 'es';
+
     const noProfile = document.getElementById('noProfile');
     const hasProfile = document.getElementById('hasProfile');
     const openSettings = document.getElementById('openSettings');
     const openSettingsFromProfile = document.getElementById('openSettingsFromProfile');
     const downloadJson = document.getElementById('downloadJson');
     const downloadMd = document.getElementById('downloadMd');
+    const languageSelect = document.getElementById('languageSelect');
+
+    applyTranslations();
+
+    languageSelect?.addEventListener('change', async (e) => {
+        currentLang = e.target.value;
+        await chrome.storage.local.set({ mycontext_language: currentLang });
+        applyTranslations();
+    });
 
     // Check if profile exists
     const { mycontext_profile: profile } = await chrome.storage.local.get(['mycontext_profile']);

@@ -9,31 +9,41 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">
-                <span class="logo-icon">📄</span>
-                <h1>myContext</h1>
+            <div class="header-row">
+                <div class="logo">
+                    <span class="logo-icon">📄</span>
+                    <h1>myContext</h1>
+                </div>
+                <div class="language-selector">
+                    <label for="languageSelect" id="languageLabel">Idioma</label>
+                    <select id="languageSelect" aria-label="Idioma">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
             </div>
-            <p class="subtitle">AI Context Document</p>
+            <p class="subtitle" id="subtitle">AI Context Document</p>
         </div>
 
         <div class="content">
             <div id="noProfile" class="state-message">
-                <p>No tienes un perfil configurado.</p>
-                <p class="hint">Configura tu perfil para generar tu documento de contexto.</p>
-                <button id="openSettings" class="btn btn-primary">Configurar perfil</button>
+                <p data-i18n="noProfile">No tienes un perfil configurado.</p>
+                <p class="hint" data-i18n="noProfileHint">Configura tu perfil para generar tu documento de contexto.</p>
+                <button id="openSettings" class="btn btn-primary" data-i18n="configureProfile">Configurar perfil</button>
             </div>
 
             <div id="hasProfile" class="state-message" style="display: none;">
-                <p>Tu perfil está listo.</p>
+                <p data-i18n="profileReady">Tu perfil está listo.</p>
                 <div class="actions">
-                    <button id="downloadJson" class="btn btn-secondary">Descargar JSON</button>
-                    <button id="downloadMd" class="btn btn-secondary">Descargar Markdown</button>
-                    <button id="openSettingsFromProfile" class="btn btn-outline">Editar perfil</button>
+                    <button id="downloadJson" class="btn btn-secondary" data-i18n="downloadJson">Descargar JSON</button>
+                    <button id="downloadMd" class="btn btn-secondary" data-i18n="downloadMd">Descargar Markdown</button>
+                    <button id="openSettingsFromProfile" class="btn btn-outline" data-i18n="editProfile">Editar perfil</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="translations.js"></script>
     <script src="popup.js"></script>
 </body>
 </html>

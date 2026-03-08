@@ -9,28 +9,39 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📄 myContext</h1>
-            <p>Configura tu documento de contexto para IAs</p>
+            <div class="header-top">
+                <div class="header-title">
+                    <h1>📄 myContext</h1>
+                    <p id="headerSubtitle">Configura tu documento de contexto para IAs</p>
+                </div>
+                <div class="language-selector">
+                    <label for="languageSelect">🌐</label>
+                    <select id="languageSelect" class="language-dropdown">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <div class="wizard">
             <div class="steps-indicator">
-                <div class="step active" data-step="1">1. Identidad</div>
-                <div class="step" data-step="2">2. Descripción</div>
-                <div class="step" data-step="3">3. Enlaces</div>
-                <div class="step" data-step="4">4. Reglas</div>
+                <div class="step active" data-step="1" data-i18n-step="step1">1. Identidad</div>
+                <div class="step" data-step="2" data-i18n-step="step2">2. Descripción</div>
+                <div class="step" data-step="3" data-i18n-step="step3">3. Enlaces</div>
+                <div class="step" data-step="4" data-i18n-step="step4">4. Reglas</div>
             </div>
 
             <div class="wizard-content">
                 <!-- Step 1: Identity -->
                 <div class="step-content active" id="step1">
-                    <h2>Identidad</h2>
+                    <h2 data-i18n="identity">Identidad</h2>
                     <div class="form-group">
-                        <label for="profileName">Nombre o título</label>
-                        <input type="text" id="profileName" placeholder="Tu nombre, nombre de empresa u organización">
+                        <label for="profileName" data-i18n="nameLabel">Nombre o título</label>
+                        <input type="text" id="profileName" data-i18n-placeholder="namePlaceholder" placeholder="Tu nombre, nombre de empresa u organización">
                     </div>
                     <div class="form-group">
-                        <label for="profileType">Tipo</label>
+                        <label for="profileType" data-i18n="typeLabel">Tipo</label>
                         <select id="profileType">
                             <option value="person">Persona</option>
                             <option value="company">Empresa</option>
@@ -41,41 +52,42 @@
 
                 <!-- Step 2: Bio -->
                 <div class="step-content" id="step2">
-                    <h2>Descripción</h2>
+                    <h2 data-i18n="description">Descripción</h2>
                     <div class="form-group">
-                        <label for="profileBio">Bio / Descripción</label>
-                        <textarea id="profileBio" rows="6" placeholder="Quién eres, qué haces, qué quieres que la IA sepa de ti o de tu organización..."></textarea>
+                        <label for="profileBio" data-i18n="bioLabel">Bio / Descripción</label>
+                        <textarea id="profileBio" rows="6" data-i18n-placeholder="bioPlaceholder" placeholder="Quién eres, qué haces..."></textarea>
                     </div>
                 </div>
 
                 <!-- Step 3: Links -->
                 <div class="step-content" id="step3">
-                    <h2>Enlaces</h2>
-                    <p class="section-hint">Añade tus enlaces oficiales (LinkedIn, web, email, etc.)</p>
+                    <h2 data-i18n="links">Enlaces</h2>
+                    <p class="section-hint" data-i18n="linksHint">Añade tus enlaces oficiales (LinkedIn, web, email, etc.)</p>
                     <div id="linksContainer"></div>
-                    <button type="button" id="addLink" class="btn btn-outline">+ Añadir enlace</button>
+                    <button type="button" id="addLink" class="btn btn-outline" data-i18n="addLink">+ Añadir enlace</button>
                 </div>
 
                 <!-- Step 4: Rules -->
                 <div class="step-content" id="step4">
-                    <h2>Reglas (opcional)</h2>
+                    <h2 data-i18n="rules">Reglas (opcional)</h2>
                     <div class="form-group">
-                        <label for="profileRules">Qué puede y no puede decir la IA</label>
-                        <textarea id="profileRules" rows="4" placeholder="Ej: No inventar datos que no estén aquí. Solo responder basándose en esta información. No dar opiniones políticas..."></textarea>
+                        <label for="profileRules" data-i18n="rulesLabel">Qué puede y no puede decir la IA</label>
+                        <textarea id="profileRules" rows="4" data-i18n-placeholder="rulesPlaceholder" placeholder="Ej: No inventar datos..."></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-actions">
-                <button type="button" id="prevStep" class="btn btn-secondary" disabled>Anterior</button>
-                <button type="button" id="nextStep" class="btn btn-primary">Siguiente</button>
-                <button type="button" id="saveProfile" class="btn btn-primary" style="display: none;">Guardar</button>
+                <button type="button" id="prevStep" class="btn btn-secondary" disabled data-i18n="prevStep">Anterior</button>
+                <button type="button" id="nextStep" class="btn btn-primary" data-i18n="nextStep">Siguiente</button>
+                <button type="button" id="saveProfile" class="btn btn-primary" style="display: none;" data-i18n="saveProfile">Guardar</button>
             </div>
         </div>
 
         <div id="statusMessage" class="status-message" style="display: none;"></div>
     </div>
 
+    <script src="translations.js"></script>
     <script src="settings.js"></script>
 </body>
 </html>

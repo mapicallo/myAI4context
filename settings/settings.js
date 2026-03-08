@@ -3,6 +3,7 @@ class ProfileManager {
     constructor() {
         this.currentStep = 1;
         this.totalSteps = 4;
+        this.currentLanguage = 'es';
         this.profile = {
             name: '',
             type: 'person',
@@ -13,12 +14,81 @@ class ProfileManager {
         this.init();
     }
 
+    t(key) {
+        const tr = typeof MyContextSettingsTranslations !== 'undefined' ? MyContextSettingsTranslations : {};
+        return tr[this.currentLanguage]?.[key] || tr.es?.[key] || key;
+    }
+
     async init() {
+        await this.loadLanguage();
         await this.loadProfile();
+        this.applyTranslations();
         this.renderSteps();
         this.renderLinks();
         this.bindEvents();
         this.updateStepVisibility();
+    }
+
+    async loadLanguage() {
+        try {
+            const { mycontext_language } = await chrome.storage.local.get(['mycontext_language']);
+            this.currentLanguage = mycontext_language || 'es';
+            const langSelect = document.getElementById('languageSelect');
+            if (langSelect) langSelect.value = this.currentLanguage;
+        } catch (e) {
+            console.warn('[myContext] Error loading language:', e);
+        }
+    }
+
+    async changeLanguage(lang) {
+        this.currentLanguage = lang;
+        await chrome.storage.local.set({ mycontext_language: lang });
+        document.documentElement.lang = lang === 'es' ? 'es' : 'en';
+        this.applyTranslations();
+        this.renderLinks();
+    }
+
+    applyTranslations() {
+        const t = (k) => this.t(k);
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (key) el.textContent = t(key);
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (key) el.placeholder = t(key);
+        });
+
+        document.querySelectorAll('[data-i18n-step]').forEach((el, i) => {
+            const keys = ['step1', 'step2', 'step3', 'step4'];
+            if (keys[i]) el.textContent = t(keys[i]);
+        });
+
+        document.getElementById('headerSubtitle').textContent = t('subtitle');
+
+        const langSelect = document.getElementById('languageSelect');
+        if (langSelect) {
+            langSelect.value = this.currentLanguage;
+            const optEs = langSelect.querySelector('option[value="es"]');
+            const optEn = langSelect.querySelector('option[value="en"]');
+            if (optEs) optEs.textContent = t('spanish');
+            if (optEn) optEn.textContent = t('english');
+        }
+
+        this.updateProfileTypeOptions();
+    }
+
+    updateProfileTypeOptions() {
+        const select = document.getElementById('profileType');
+        if (!select) return;
+        const value = select.value;
+        select.innerHTML = `
+            <option value="person">${this.t('typePerson')}</option>
+            <option value="company">${this.t('typeCompany')}</option>
+            <option value="organization">${this.t('typeOrganization')}</option>
+        `;
+        select.value = value;
     }
 
     async loadProfile() {
@@ -53,12 +123,14 @@ class ProfileManager {
     renderLinks() {
         const container = document.getElementById('linksContainer');
         container.innerHTML = '';
+        const labelPh = this.t('linkLabelPlaceholder');
+        const urlPh = this.t('linkUrlPlaceholder');
         (this.profile.links || []).forEach((link, index) => {
             const div = document.createElement('div');
             div.className = 'link-item';
             div.innerHTML = `
-                <input type="text" class="link-label" placeholder="Etiqueta (ej: LinkedIn)" value="${escapeHtml(link.label || '')}" data-index="${index}" data-field="label">
-                <input type="url" class="link-url" placeholder="URL" value="${escapeHtml(link.url || '')}" data-index="${index}" data-field="url">
+                <input type="text" class="link-label" placeholder="${escapeHtml(labelPh)}" value="${escapeHtml(link.label || '')}" data-index="${index}" data-field="label">
+                <input type="url" class="link-url" placeholder="${escapeHtml(urlPh)}" value="${escapeHtml(link.url || '')}" data-index="${index}" data-field="url">
                 <button type="button" class="btn-remove" data-index="${index}">×</button>
             `;
             container.appendChild(div);
@@ -85,6 +157,11 @@ class ProfileManager {
     }
 
     bindEvents() {
+        const langSelect = document.getElementById('languageSelect');
+        if (langSelect) {
+            langSelect.addEventListener('change', (e) => this.changeLanguage(e.target.value));
+        }
+
         document.getElementById('addLink').addEventListener('click', () => {
             this.profile.links = this.profile.links || [];
             this.profile.links.push({ label: '', url: '' });
@@ -145,9 +222,9 @@ class ProfileManager {
         this.collectFormData();
         try {
             await chrome.storage.local.set({ mycontext_profile: this.profile });
-            this.showStatus('Perfil guardado correctamente', 'success');
+            this.showStatus(this.t('profileSaved'), 'success');
         } catch (e) {
-            this.showStatus('Error al guardar: ' + e.message, 'error');
+            this.showStatus(this.t('errorSaving') + ': ' + e.message, 'error');
         }
     }
 
