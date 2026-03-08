@@ -80,11 +80,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+const DEFAULT_RULES = {
+    es: `## Reglas mínimas por defecto
+- No inventar datos que no estén en este documento.
+- Solo responder basándose en la información proporcionada.
+- No dar opiniones personales ni políticas.
+- Si no sabes algo, indícalo en lugar de inventar.`,
+    en: `## Default minimum rules
+- Do not invent data that is not in this document.
+- Only respond based on the information provided.
+- Do not give personal or political opinions.
+- If you don't know something, say so instead of inventing.`
+};
+
 function buildContextDocument(profile) {
     const bioFromFiles = (profile.bioFiles || []).map(f => `# ${f.name}\n\n${f.content || ''}`).join('\n\n---\n\n');
     const fullBio = [profile.bio || '', bioFromFiles].filter(Boolean).join('\n\n\n');
     const rulesFromFiles = (profile.rulesFiles || []).map(f => `# ${f.name}\n\n${f.content || ''}`).join('\n\n---\n\n');
-    const fullRules = [profile.rules || '', rulesFromFiles].filter(Boolean).join('\n\n\n');
+    let fullRules = [profile.rules || '', rulesFromFiles].filter(Boolean).join('\n\n\n');
+    if (profile.useDefaultRules !== false) {
+        const lang = (typeof MyContextTranslations !== 'undefined' && currentLang) ? currentLang : 'es';
+        const defaultRules = DEFAULT_RULES[lang] || DEFAULT_RULES.es;
+        fullRules = [defaultRules, fullRules].filter(Boolean).join('\n\n\n');
+    }
     return {
         version: '1.0',
         type: 'ai-context-document',

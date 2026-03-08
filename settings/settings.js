@@ -14,7 +14,8 @@ class ProfileManager {
             bioFiles: [],
             links: [],
             rules: '',
-            rulesFiles: []
+            rulesFiles: [],
+            useDefaultRules: true
         };
         this.init();
     }
@@ -110,6 +111,8 @@ class ProfileManager {
         document.getElementById('profileName').value = this.profile.name || '';
         document.getElementById('profileBio').value = this.profile.bio || '';
         document.getElementById('profileRules').value = this.profile.rules || '';
+        const defaultRulesCb = document.getElementById('useDefaultRules');
+        if (defaultRulesCb) defaultRulesCb.checked = this.profile.useDefaultRules !== false;
     }
 
     renderSteps() {
@@ -317,6 +320,8 @@ class ProfileManager {
         this.profile.name = document.getElementById('profileName').value.trim();
         this.profile.bio = document.getElementById('profileBio').value.trim();
         this.profile.rules = document.getElementById('profileRules').value.trim();
+        const defaultRulesCb = document.getElementById('useDefaultRules');
+        this.profile.useDefaultRules = defaultRulesCb ? defaultRulesCb.checked : true;
         this.profile.links = (this.profile.links || []).filter(l => l.url && l.url.trim());
         this.profile.bioFiles = this.profile.bioFiles || [];
         this.profile.rulesFiles = this.profile.rulesFiles || [];
