@@ -1,7 +1,7 @@
 // myContext – Traducciones ES/EN
 const MyContextTranslations = {
   es: {
-    subtitle: 'AI Context Document',
+    subtitle: 'AI Context Document · AI4Context',
     noProfile: 'No tienes un perfil configurado.',
     noProfileHint: 'Configura tu perfil para generar tu documento de contexto.',
     configureProfile: 'Configurar perfil',
@@ -14,7 +14,7 @@ const MyContextTranslations = {
     english: 'English'
   },
   en: {
-    subtitle: 'AI Context Document',
+    subtitle: 'AI Context Document · AI4Context',
     noProfile: 'You don\'t have a profile configured.',
     noProfileHint: 'Configure your profile to generate your context document.',
     configureProfile: 'Configure profile',

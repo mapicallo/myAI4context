@@ -1,4 +1,6 @@
-# myContext - AI Context Document
+# myAI4context - AI Context Document
+
+Extensión de AI4Context. [ai4context.com](https://ai4context.com)
 
 **ES:** Documento de contexto para IAs. Un único lugar donde personas y organizaciones definen qué quieren que se sepa de ellos. Comparte un enlace, la IA responde.
 
@@ -30,7 +32,7 @@ El documento generado sigue el esquema AI Context Document:
 ## Estructura del proyecto
 
 ```
-myContext/
+myAI4context/
 ├── manifest.json
 ├── popup/           # Popup de la extensión
 ├── settings/        # Wizard de configuración (pestaña completa)

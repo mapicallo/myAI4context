@@ -1,8 +1,8 @@
 // myContext Settings – Traducciones ES/EN
 const MyContextSettingsTranslations = {
   es: {
-    title: 'myContext',
-    subtitle: 'Configura tu documento de contexto para IAs',
+    title: 'myAI4context',
+    subtitle: 'Configura tu documento de contexto para IAs · AI4Context',
     step1: '1. Identidad',
     step2: '2. Descripción',
     step3: '3. Enlaces',
@@ -35,8 +35,8 @@ const MyContextSettingsTranslations = {
     english: 'English'
   },
   en: {
-    title: 'myContext',
-    subtitle: 'Configure your AI context document',
+    title: 'myAI4context',
+    subtitle: 'Configure your AI context document · AI4Context',
     step1: '1. Identity',
     step2: '2. Description',
     step3: '3. Links',

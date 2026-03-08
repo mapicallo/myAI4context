@@ -99,7 +99,7 @@ function buildContextDocument(profile) {
 function contextToMarkdown(doc) {
     const p = doc.profile;
     let md = `# AI Context Document\n\n`;
-    md += `> Documento de contexto para IAs. Generado por myContext.\n\n`;
+    md += `> Documento de contexto para IAs. Generado por myAI4context (AI4Context).\n\n`;
     md += `## ${p.name || 'Sin nombre'}\n\n`;
     if (p.bio) md += `${p.bio}\n\n`;
     if (p.links && p.links.length > 0) {
