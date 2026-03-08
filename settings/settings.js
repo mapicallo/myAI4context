@@ -1,4 +1,8 @@
 // myContext Settings - Profile Wizard
+if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL('libs/pdf.worker.min.js');
+}
+
 class ProfileManager {
     constructor() {
         this.currentStep = 1;
@@ -163,6 +167,69 @@ class ProfileManager {
                 if (step <= this.currentStep) this.goToStep(step);
             });
         });
+
+        document.getElementById('selectBioFiles')?.addEventListener('click', () => {
+            document.getElementById('bioFilesInput').click();
+        });
+        document.getElementById('bioFilesInput')?.addEventListener('change', (e) => this.handleBioFiles(e));
+    }
+
+    async handleBioFiles(e) {
+        const files = Array.from(e.target.files || []);
+        e.target.value = '';
+        if (files.length === 0) return;
+
+        const statusEl = document.getElementById('bioFilesStatus');
+        const textarea = document.getElementById('profileBio');
+        statusEl.textContent = this.t('processingFiles');
+
+        let allText = '';
+        for (const file of files) {
+            try {
+                const text = await this.extractTextFromFile(file);
+                if (text) allText += (allText ? '\n\n---\n\n' : '') + `# ${file.name}\n\n` + text;
+            } catch (err) {
+                console.warn('[myAI4context] Error extracting:', file.name, err);
+                statusEl.textContent = this.t('fileError') + ': ' + file.name;
+            }
+        }
+
+        if (allText) {
+            const current = textarea.value.trim();
+            textarea.value = current ? current + '\n\n' + allText : allText;
+            statusEl.textContent = this.t('filesAdded');
+        }
+        setTimeout(() => { statusEl.textContent = ''; }, 2000);
+    }
+
+    async extractTextFromFile(file) {
+        const ext = (file.name.split('.').pop() || '').toLowerCase();
+        if (['md', 'txt'].includes(ext)) {
+            return new Promise((resolve, reject) => {
+                const r = new FileReader();
+                r.onload = () => resolve(r.result || '');
+                r.onerror = () => reject(r.error);
+                r.readAsText(file);
+            });
+        }
+        if (['doc', 'docx'].includes(ext) && typeof mammoth !== 'undefined') {
+            const buf = await file.arrayBuffer();
+            const r = await mammoth.extractRawText({ arrayBuffer: buf });
+            return r.value || '';
+        }
+        if (ext === 'pdf' && typeof pdfjsLib !== 'undefined') {
+            const buf = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument(buf).promise;
+            const numPages = pdf.numPages;
+            let text = '';
+            for (let i = 1; i <= numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                text += content.items.map(item => item.str).join(' ') + '\n';
+            }
+            return text.trim();
+        }
+        throw new Error('Formato no soportado: ' + ext);
     }
 
     collectFormData() {

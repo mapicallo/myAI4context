@@ -23,5 +23,9 @@
     "48": "assets/icons/icon48.png",
     "128": "assets/icons/icon128.png"
   },
-  "options_page": "settings/settings.html"
+  "options_page": "settings/settings.html",
+  "web_accessible_resources": [{
+    "resources": ["libs/*"],
+    "matches": ["<all_urls>"]
+  }]
 }

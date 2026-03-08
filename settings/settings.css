@@ -164,6 +164,22 @@ body {
     margin-bottom: 16px;
 }
 
+.file-upload-group {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e9ecef;
+}
+
+.file-upload-group .btn {
+    margin-right: 8px;
+}
+
+.file-status {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-left: 8px;
+}
+
 .link-item {
     display: flex;
     gap: 8px;
