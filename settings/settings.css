@@ -204,8 +204,25 @@ body {
 }
 
 .file-item .btn-remove {
-    padding: 4px 10px;
+    padding: 6px;
     margin-left: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-item .btn-remove:hover {
+    background: #f8d7da;
+    color: #dc3545;
+}
+
+.file-item .icon-trash {
+    display: block;
 }
 
 .link-item {

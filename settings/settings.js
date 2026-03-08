@@ -23,6 +23,10 @@ class ProfileManager {
         return tr[this.currentLanguage]?.[key] || tr.es?.[key] || key;
     }
 
+    getTrashIcon() {
+        return `<svg class="icon-trash" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
+    }
+
     async init() {
         await this.loadLanguage();
         await this.loadProfile();
@@ -122,7 +126,7 @@ class ProfileManager {
             div.className = 'file-item';
             div.innerHTML = `
                 <span class="file-item-name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
-                <button type="button" class="btn-remove" data-index="${index}">×</button>
+                <button type="button" class="btn-remove btn-remove-file" data-index="${index}" title="${this.t('removeFile') || 'Eliminar'}" aria-label="Eliminar">${this.getTrashIcon()}</button>
             `;
             container.appendChild(div);
         });
