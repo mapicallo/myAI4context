@@ -46,7 +46,8 @@ const MyContextSettingsTranslations = {
     unnamedProfile: '(sin nombre)',
     language: 'Idioma',
     spanish: 'Español',
-    english: 'English'
+    english: 'English',
+    shareLink: 'Compartir (web, LinkedIn, documentos)'
   },
   en: {
     title: 'myAI4context',
@@ -94,6 +95,7 @@ const MyContextSettingsTranslations = {
     unnamedProfile: '(unnamed)',
     language: 'Language',
     spanish: 'Español',
-    english: 'English'
+    english: 'English',
+    shareLink: 'Share (web, LinkedIn, documents)'
   }
 };

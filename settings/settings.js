@@ -287,6 +287,12 @@ class ProfileManager {
             document.getElementById('rulesFilesInput').click();
         });
         document.getElementById('rulesFilesInput')?.addEventListener('change', (e) => this.handleRulesFiles(e));
+
+        document.getElementById('shareLink')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = chrome.runtime.getURL('share/share.html?lang=' + (this.currentLanguage || 'es'));
+            chrome.tabs.create({ url });
+        });
     }
 
     async handleRulesFiles(e) {

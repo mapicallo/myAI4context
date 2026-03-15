@@ -55,8 +55,8 @@ function renderProfiles(profiles) {
         row.innerHTML = `
             <span class="profile-name" title="${escapeHtml(displayName)}">${escapeHtml(displayName)}</span>
             <div class="profile-actions">
-                <button class="btn-icon" data-action="json" data-id="${profile.id}" title="${t('downloadJson')}">JSON</button>
-                <button class="btn-icon" data-action="md" data-id="${profile.id}" title="${t('downloadMd')}">MD</button>
+                <button class="btn-icon" data-action="json" data-id="${profile.id}" title="${t('downloadJson')}"><span class="btn-download-icon">⬇</span> JSON</button>
+                <button class="btn-icon" data-action="md" data-id="${profile.id}" title="${t('downloadMd')}"><span class="btn-download-icon">⬇</span> MD</button>
                 <button class="btn-icon" data-action="edit" data-id="${profile.id}" title="${t('editProfile')}">✎</button>
                 <button class="btn-icon btn-danger" data-action="delete" data-id="${profile.id}" title="${t('deleteProfile')}">🗑</button>
             </div>
@@ -179,6 +179,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('newProfileFromList')?.addEventListener('click', async () => {
         await chrome.storage.local.set({ mycontext_editingProfileId: null });
         chrome.runtime.openOptionsPage();
+    });
+
+    document.getElementById('shareLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = chrome.runtime.getURL('share/share.html');
+        if (currentLang) {
+            chrome.tabs.create({ url: url + '?lang=' + currentLang });
+        } else {
+            chrome.tabs.create({ url });
+        }
     });
 });
 

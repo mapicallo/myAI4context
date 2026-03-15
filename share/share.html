@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myAI4context - Compartir</title>
+    <link rel="stylesheet" href="share.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-row">
+                <h1>📄 myAI4context</h1>
+                <div class="language-selector">
+                    <label for="languageSelect" id="languageLabel">Idioma</label>
+                    <select id="languageSelect" aria-label="Idioma">
+                        <option value="es">Español</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+            <p class="subtitle" id="shareSubtitle">Comparte tu documento en web, redes y documentos</p>
+        </div>
+
+        <div class="step-block">
+            <h2 id="step1Title">1. Sube tu documento</h2>
+            <p id="step1Desc" class="step-desc">Descarga tu perfil en MD desde el popup, súbelo a tu web, GitHub, Google Drive u otro hosting, y obtén la URL pública.</p>
+            <p class="step-hint" id="step1Hint">Ejemplo: https://tudominio.com/mi-contexto.md</p>
+        </div>
+
+        <div class="step-block">
+            <h2 id="step2Title">2. Pega la URL de tu documento</h2>
+            <input type="url" id="docUrl" class="url-input" placeholder="" aria-label="URL del documento">
+            <p class="step-hint" id="urlHint">Los enlaces directos al chat requieren la extensión myAI4context instalada.</p>
+        </div>
+
+        <div class="templates-section">
+            <h2 id="templatesTitle">Plantillas listas para copiar</h2>
+
+            <div class="template-block">
+                <h3 id="templateWebTitle">🌐 Tu sitio web</h3>
+                <p id="templateWebDesc" class="template-desc">Copia y pega este HTML donde quieras mostrar los botones.</p>
+                <div class="code-block">
+                    <pre id="htmlTemplate"><code></code></pre>
+                    <button type="button" class="btn-copy" data-copy="html" id="copyHtml">Copiar</button>
+                </div>
+            </div>
+
+            <div class="template-block">
+                <h3 id="templateLinkedInTitle">💼 LinkedIn</h3>
+                <p id="templateLinkedInDesc" class="template-desc">Añade este enlace en tu perfil (sitio web, información de contacto) o en publicaciones.</p>
+                <div class="code-block">
+                    <pre id="linkedInTemplate"><code></code></pre>
+                    <button type="button" class="btn-copy" data-copy="linkedin" id="copyLinkedIn">Copiar</button>
+                </div>
+            </div>
+
+            <div class="template-block">
+                <h3 id="templateDocTitle">📄 Documento (Word, PDF, Google Docs)</h3>
+                <p id="templateDocDesc" class="template-desc">Selecciona texto → Insertar enlace (Ctrl+K) → pega la URL.</p>
+                <div class="code-block">
+                    <pre id="docTemplate"><code></code></pre>
+                    <button type="button" class="btn-copy" data-copy="doc" id="copyDoc">Copiar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <a href="https://ai4context.com" target="_blank" rel="noopener">ai4context.com</a>
+            <span class="footer-attribution">© 2025 Manuel Angel Picallo Pérez</span>
+        </div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script src="share.js"></script>
+</body>
+</html>

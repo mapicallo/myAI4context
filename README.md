@@ -22,6 +22,16 @@ Extensión de AI4Context. [ai4context.com](https://ai4context.com)
 3. **Guardar**: Al final del wizard, pulsa "Guardar".
 4. **Descargar**: En el popup, descarga tu documento en JSON o Markdown.
 
+## POC: Abrir chat con contexto pre-cargado
+
+Si tienes la extensión instalada, puedes usar enlaces que abren ChatGPT, Claude o Gemini con un documento de contexto ya inyectado:
+
+- **ChatGPT:** `https://chat.openai.com/?context_url=https%3A%2F%2Fai4context.com%2FmyAI4c-AI4Contest-es.md`
+- **Claude:** `https://claude.ai/?context_url=...`
+- **Gemini:** `https://gemini.google.com/?context_url=...`
+
+Ver [POC_CONTEXT_URL.md](POC_CONTEXT_URL.md) para el formato completo y ejemplos.
+
 ## Formato del documento
 
 El documento generado sigue el esquema AI Context Document:

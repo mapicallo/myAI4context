@@ -16,6 +16,8 @@ $items = @(
     "manifest.json",
     "popup",
     "settings",
+    "share",
+    "content",
     "background",
     "assets",
     "libs"

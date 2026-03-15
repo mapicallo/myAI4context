@@ -11,6 +11,7 @@ const MyContextTranslations = {
     editProfile: 'Editar perfil',
     deleteProfile: 'Eliminar perfil',
     confirmDelete: '¿Eliminar este perfil?',
+    share: 'Compartir (web, LinkedIn, documentos)',
     language: 'Idioma',
     spanish: 'Español',
     english: 'English'
@@ -26,6 +27,7 @@ const MyContextTranslations = {
     editProfile: 'Edit profile',
     deleteProfile: 'Delete profile',
     confirmDelete: 'Delete this profile?',
+    share: 'Share (web, LinkedIn, documents)',
     language: 'Language',
     spanish: 'Español',
     english: 'English'
