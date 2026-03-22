@@ -12,6 +12,7 @@ const MyContextTranslations = {
     deleteProfile: 'Eliminar perfil',
     confirmDelete: '¿Eliminar este perfil?',
     share: 'Compartir (web, LinkedIn, documentos)',
+    pricingLink: 'Precios (web)',
     language: 'Idioma',
     spanish: 'Español',
     english: 'English'
@@ -28,6 +29,7 @@ const MyContextTranslations = {
     deleteProfile: 'Delete profile',
     confirmDelete: 'Delete this profile?',
     share: 'Share (web, LinkedIn, documents)',
+    pricingLink: 'Pricing (website)',
     language: 'Language',
     spanish: 'Español',
     english: 'English'

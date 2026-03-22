@@ -23,7 +23,8 @@ const MyContextShareTranslations = {
     htmlDownloadBtn: 'Descargar documento',
     language: 'Idioma',
     spanish: 'Español',
-    english: 'English'
+    english: 'English',
+    pricingLink: 'Precios (web)'
   },
   en: {
     shareSubtitle: 'Share your document on web, social media and documents',
@@ -48,6 +49,7 @@ const MyContextShareTranslations = {
     htmlDownloadBtn: 'Download document',
     language: 'Language',
     spanish: 'Español',
-    english: 'English'
+    english: 'English',
+    pricingLink: 'Pricing (website)'
   }
 };

@@ -47,7 +47,8 @@ const MyContextSettingsTranslations = {
     language: 'Idioma',
     spanish: 'Español',
     english: 'English',
-    shareLink: 'Compartir (web, LinkedIn, documentos)'
+    shareLink: 'Compartir (web, LinkedIn, documentos)',
+    pricingLink: 'Precios (web)'
   },
   en: {
     title: 'myAI4context',
@@ -96,6 +97,7 @@ const MyContextSettingsTranslations = {
     language: 'Language',
     spanish: 'Español',
     english: 'English',
-    shareLink: 'Share (web, LinkedIn, documents)'
+    shareLink: 'Share (web, LinkedIn, documents)',
+    pricingLink: 'Pricing (website)'
   }
 };

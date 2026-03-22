@@ -143,6 +143,8 @@
             if (optEn) optEn.textContent = t('english');
         }
         document.documentElement.lang = currentLang === 'es' ? 'es' : 'en';
+        const pricingLink = document.getElementById('pricingLink');
+        if (pricingLink) pricingLink.textContent = t('pricingLink');
     }
 
     function showExtensionVersionInFooter() {
