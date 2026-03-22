@@ -136,7 +136,7 @@ class ProfileManager {
      * Recarga perfil desde storage y vuelve al paso 1 (Identidad).
      * Necesario cuando la página de opciones ya estaba abierta: openOptionsPage() no recarga el documento.
      */
-    async reloadProfileFromStorage(fromNewProfileButton) {
+    async reloadProfileFromStorage(fromNewProfileButton, clearSettingsOpenNonce = false) {
         await this.loadProfile();
         this.currentStep = 1;
         this.renderLinks();
@@ -149,6 +149,13 @@ class ProfileManager {
                 await chrome.storage.local.remove('mycontext_newProfileRequest');
             } catch (e) {
                 console.warn('[myContext] remove newProfileRequest:', e);
+            }
+        }
+        if (clearSettingsOpenNonce) {
+            try {
+                await chrome.storage.local.remove('mycontext_settingsOpenNonce');
+            } catch (e) {
+                console.warn('[myContext] remove settingsOpenNonce:', e);
             }
         }
     }
@@ -273,9 +280,10 @@ class ProfileManager {
         chrome.storage.onChanged.addListener((changes, area) => {
             if (area !== 'local') return;
             const newProfileTap = changes.mycontext_newProfileRequest?.newValue != null;
+            const settingsOpenNonce = changes.mycontext_settingsOpenNonce?.newValue != null;
             const editingChanged = !!changes.mycontext_editingProfileId;
-            if (newProfileTap || editingChanged) {
-                this.reloadProfileFromStorage(newProfileTap);
+            if (newProfileTap || editingChanged || settingsOpenNonce) {
+                this.reloadProfileFromStorage(newProfileTap, settingsOpenNonce);
             }
         });
 
@@ -451,6 +459,8 @@ class ProfileManager {
             await chrome.storage.local.remove('mycontext_editingProfileId');
             await chrome.storage.local.remove('mycontext_profile');
             this.showStatus(this.t('profileSaved'), 'success');
+            // Tras guardar, el paso debe volver a 1 aunque remove(editingId) no dispare onChanged (p. ej. ya era null en perfil nuevo).
+            await this.reloadProfileFromStorage(false, false);
         } catch (e) {
             this.showStatus(this.t('errorSaving') + ': ' + e.message, 'error');
         }

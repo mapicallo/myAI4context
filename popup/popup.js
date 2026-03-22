@@ -107,7 +107,11 @@ async function handleProfileAction(action, profileId) {
     if (!profile && action !== 'new') return;
 
     if (action === 'edit') {
-        await chrome.storage.local.set({ mycontext_editingProfileId: profileId });
+        // Nonce: fuerza recarga del asistente al paso 1 aunque options ya esté abierta o el id no cambie en edge cases.
+        await chrome.storage.local.set({
+            mycontext_editingProfileId: profileId,
+            mycontext_settingsOpenNonce: Date.now()
+        });
         chrome.runtime.openOptionsPage();
         return;
     }
