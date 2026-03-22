@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "myAI4context - AI Context Document",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "AI Context Document by AI4Context. Create and share your profile. One link, one document. Share with any AI.",
   "author": "Manuel Angel Picallo Pérez",
   "permissions": ["storage"],
