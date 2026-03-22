@@ -233,6 +233,13 @@ body {
     text-decoration: underline;
 }
 
+.footer-version {
+    font-size: 0.65rem;
+    color: #868e96;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+}
+
 .footer-attribution {
     font-size: 0.7rem;
     color: #adb5bd;

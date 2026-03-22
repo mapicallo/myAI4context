@@ -155,6 +155,19 @@ async function refreshPopup() {
     }
 }
 
+function showExtensionVersionInFooter() {
+    try {
+        const v = chrome.runtime.getManifest()?.version;
+        const el = document.getElementById('extensionVersion');
+        if (!el || !v) return;
+        el.textContent = 'v' + v;
+        el.title = 'myAI4context ' + v;
+        el.removeAttribute('hidden');
+    } catch (e) {
+        console.warn('[myAI4context] version footer:', e);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const { mycontext_language: lang } = await chrome.storage.local.get(['mycontext_language']);
     currentLang = lang || 'es';
@@ -162,6 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await migrateFromSingleProfile();
     applyTranslations();
     await refreshPopup();
+    showExtensionVersionInFooter();
 
     const languageSelect = document.getElementById('languageSelect');
     languageSelect?.addEventListener('change', async (e) => {

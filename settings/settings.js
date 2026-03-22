@@ -472,6 +472,20 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+function showExtensionVersionInFooter() {
+    try {
+        const v = chrome.runtime.getManifest()?.version;
+        const el = document.getElementById('extensionVersion');
+        if (!el || !v) return;
+        el.textContent = 'v' + v;
+        el.title = 'myAI4context ' + v;
+        el.removeAttribute('hidden');
+    } catch (e) {
+        console.warn('[myContext] version footer:', e);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     new ProfileManager();
+    showExtensionVersionInFooter();
 });

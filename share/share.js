@@ -13,7 +13,8 @@
         const encoded = encodeURIComponent(docUrl);
         return {
             chatgpt: `https://chat.openai.com/?context_url=${encoded}`,
-            claude: `https://claude.ai/?context_url=${encoded}`,
+            // /new abre conversación nueva con el parámetro visible para el content script
+            claude: `https://claude.ai/new?context_url=${encoded}`,
             gemini: `https://gemini.google.com/?context_url=${encoded}`
         };
     }
@@ -37,31 +38,69 @@
 </style>`;
     }
 
+    function renderProfileUrlRows(docUrl) {
+        const container = document.getElementById('profileUrlsContainer');
+        if (!container) return;
+
+        container.replaceChildren();
+
+        const placeholder = t('templatePlaceholder');
+        if (!docUrl) {
+            const p = document.createElement('p');
+            p.className = 'profile-urls-empty';
+            p.textContent = placeholder;
+            container.appendChild(p);
+            return;
+        }
+
+        const urls = getChatUrls(docUrl);
+        const rows = [
+            { label: t('templateDownloadLabel'), value: docUrl },
+            { label: t('templateChatGptLabel'), value: urls.chatgpt },
+            { label: t('templateClaudeLabel'), value: urls.claude },
+            { label: t('templateGeminiLabel'), value: urls.gemini }
+        ];
+
+        rows.forEach(({ label, value }) => {
+            const row = document.createElement('div');
+            row.className = 'url-row';
+
+            const lab = document.createElement('span');
+            lab.className = 'url-row-label';
+            lab.textContent = label;
+
+            const body = document.createElement('div');
+            body.className = 'url-row-body';
+
+            const code = document.createElement('code');
+            code.className = 'url-row-value';
+            code.textContent = value;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn-copy-row';
+            btn.textContent = t('copyButton');
+            btn.addEventListener('click', () => copyToClipboard(value, btn));
+
+            body.appendChild(code);
+            body.appendChild(btn);
+            row.appendChild(lab);
+            row.appendChild(body);
+            container.appendChild(row);
+        });
+    }
+
     function updateTemplates() {
         const docUrl = document.getElementById('docUrl').value.trim();
         const placeholder = t('templatePlaceholder');
         if (!docUrl) {
             document.querySelector('#htmlTemplate code').textContent = '<!-- ' + placeholder + ' -->';
-            document.querySelector('#linkedInTemplate code').textContent = placeholder;
-            document.querySelector('#docTemplate code').textContent = placeholder;
+            renderProfileUrlRows('');
             return;
         }
 
-        const urls = getChatUrls(docUrl);
-        const chatLabel = t('templateChatLinkLabel');
-        const downloadLabel = t('templateDownloadLabel');
-        const urlDescarga = t('templateUrlDescarga');
-        const urlChat = t('templateUrlChat');
-
         document.querySelector('#htmlTemplate code').textContent = getHtmlTemplate(docUrl);
-
-        document.querySelector('#linkedInTemplate code').textContent =
-            `${chatLabel}\n${urls.chatgpt}\n\n` +
-            `${downloadLabel}\n${docUrl}`;
-
-        document.querySelector('#docTemplate code').textContent =
-            `${urlDescarga}\n${docUrl}\n\n` +
-            `${urlChat}\n${urls.chatgpt}`;
+        renderProfileUrlRows(docUrl);
     }
 
     function copyToClipboard(text, btn) {
@@ -86,11 +125,12 @@
         document.getElementById('templatesTitle').textContent = t('templatesTitle');
         document.getElementById('templateWebTitle').textContent = t('templateWebTitle');
         document.getElementById('templateWebDesc').textContent = t('templateWebDesc');
-        document.getElementById('templateLinkedInTitle').textContent = t('templateLinkedInTitle');
-        document.getElementById('templateLinkedInDesc').textContent = t('templateLinkedInDesc');
-        document.getElementById('templateDocTitle').textContent = t('templateDocTitle');
-        document.getElementById('templateDocDesc').textContent = t('templateDocDesc');
-        document.querySelectorAll('.btn-copy').forEach(b => b.textContent = t('copyButton'));
+        const profileTitle = document.getElementById('templateProfileTitle');
+        const profileDesc = document.getElementById('templateProfileDesc');
+        if (profileTitle) profileTitle.textContent = t('templateProfileTitle');
+        if (profileDesc) profileDesc.textContent = t('templateProfileDesc');
+        document.querySelectorAll('.code-block .btn-copy').forEach(b => b.textContent = t('copyButton'));
+        document.querySelectorAll('#profileUrlsContainer .btn-copy-row').forEach(b => b.textContent = t('copyButton'));
         document.getElementById('docUrl').placeholder = t('urlPlaceholder');
         const langLabel = document.getElementById('languageLabel');
         if (langLabel) langLabel.textContent = t('language');
@@ -105,6 +145,19 @@
         document.documentElement.lang = currentLang === 'es' ? 'es' : 'en';
     }
 
+    function showExtensionVersionInFooter() {
+        try {
+            const v = chrome.runtime.getManifest()?.version;
+            const el = document.getElementById('extensionVersion');
+            if (!el || !v) return;
+            el.textContent = 'v' + v;
+            el.title = 'myAI4context ' + v;
+            el.removeAttribute('hidden');
+        } catch (e) {
+            console.warn('[myAI4context] version footer:', e);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
         const params = new URLSearchParams(window.location.search);
         const langParam = params.get('lang');
@@ -115,6 +168,7 @@
         }
 
         applyTranslations();
+        showExtensionVersionInFooter();
 
         const langSelect = document.getElementById('languageSelect');
         if (langSelect) {
@@ -129,9 +183,9 @@
         docUrlInput.addEventListener('input', updateTemplates);
         docUrlInput.addEventListener('paste', () => setTimeout(updateTemplates, 0));
 
-        document.querySelectorAll('.btn-copy').forEach(btn => {
+        document.querySelectorAll('.code-block .btn-copy').forEach(btn => {
             btn.addEventListener('click', () => {
-                const block = btn.closest('.template-block');
+                const block = btn.closest('.code-block');
                 const code = block?.querySelector('code');
                 if (code) copyToClipboard(code.textContent, btn);
             });
