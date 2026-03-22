@@ -132,6 +132,27 @@ class ProfileManager {
         }
     }
 
+    /**
+     * Recarga perfil desde storage y vuelve al paso 1 (Identidad).
+     * Necesario cuando la página de opciones ya estaba abierta: openOptionsPage() no recarga el documento.
+     */
+    async reloadProfileFromStorage(fromNewProfileButton) {
+        await this.loadProfile();
+        this.currentStep = 1;
+        this.renderLinks();
+        this.renderBioFiles();
+        this.renderRulesFiles();
+        this.renderSteps();
+        this.updateStepVisibility();
+        if (fromNewProfileButton) {
+            try {
+                await chrome.storage.local.remove('mycontext_newProfileRequest');
+            } catch (e) {
+                console.warn('[myContext] remove newProfileRequest:', e);
+            }
+        }
+    }
+
     updateProfileContext() {
         const el = document.getElementById('profileContext');
         if (!el) return;
@@ -250,12 +271,11 @@ class ProfileManager {
         }
 
         chrome.storage.onChanged.addListener((changes, area) => {
-            if (area === 'local' && changes.mycontext_editingProfileId) {
-                this.loadProfile().then(() => {
-                    this.renderLinks();
-                    this.renderBioFiles();
-                    this.renderRulesFiles();
-                });
+            if (area !== 'local') return;
+            const newProfileTap = changes.mycontext_newProfileRequest?.newValue != null;
+            const editingChanged = !!changes.mycontext_editingProfileId;
+            if (newProfileTap || editingChanged) {
+                this.reloadProfileFromStorage(newProfileTap);
             }
         });
 

@@ -172,12 +172,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     document.getElementById('newProfile')?.addEventListener('click', async () => {
-        await chrome.storage.local.set({ mycontext_editingProfileId: null });
+        // Nonce fuerza onChanged aunque editingProfileId ya fuera null (p. ej. opciones ya abiertas).
+        await chrome.storage.local.set({
+            mycontext_editingProfileId: null,
+            mycontext_newProfileRequest: Date.now()
+        });
         chrome.runtime.openOptionsPage();
     });
 
     document.getElementById('newProfileFromList')?.addEventListener('click', async () => {
-        await chrome.storage.local.set({ mycontext_editingProfileId: null });
+        await chrome.storage.local.set({
+            mycontext_editingProfileId: null,
+            mycontext_newProfileRequest: Date.now()
+        });
         chrome.runtime.openOptionsPage();
     });
 
